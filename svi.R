@@ -1,6 +1,8 @@
 install.packages("stats")
+install.packages("devtools")
 
 library(tidyverse)
+library(devtools)
 
 
 setwd("~/Documents/GitHub/ChathamData")
@@ -23,11 +25,46 @@ census_trans <- transform(census,
 #log.census <- log(census_trans[5:18])
 
 
+
+all <- census_trans[,5:18]
 #apply pca
-censusPCA <- prcomp(census_trans[5:18],
+censusPCA <- prcomp(all,
                     center = TRUE,
                     scale. = TRUE)
-#look at results
+
+#look at results in different ways
 print(censusPCA)
 plot(censusPCA, type = "lines")
 summary(censusPCA)
+biplot(censusPCA, scale=0, cex=c(1,0.7))
+
+#compute st. dev. and variance
+stddev <- censusPCA$sdev
+pr_var <- stddev^2
+pr_var[1:10]
+
+#scree plot
+propvarex <- pr_var/sum(pr_var)
+propvarex
+plot(propvarex, xlab = "Principal Comp", ylab = "Prop of Var Expl", type = "b")
+plot(cumsum(propvarex), xlab = "Principal Comp", ylab = "Cum Prop of Var Expl", type = "b")
+
+#Kaiser eigenvalue-greater-than-one rule
+plot(censusPCA, type="line")
+abline(h=1,col="red")
+censusPCA$sdev^2
+#4 components meet the criterion 
+
+censusPCA$rotation[,1:4]
+
+#varimax rotation
+vmx <- varimax(censusPCA$rotation[, 1:4],normalize=FALSE)
+vmx
+
+#scores
+scores<-top4<-censusPCA$x[,1:4]
+
+#scores after applying varimax rotation
+scores_rotate<-scores %*% vmx$rotmat
+
+
