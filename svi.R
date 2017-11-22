@@ -1,5 +1,4 @@
 install.packages("stats")
-install.packages("devtools")
 
 library(tidyverse)
 library(devtools)
@@ -44,7 +43,7 @@ pr_var <- stddev^2
 pr_var[1:10]
 
 #scree plot
-propvarex <- pr_var/sum(pr_var)
+propvarex <- pr_var/sum(pr_var) #proportion of variance explained by each component
 propvarex
 plot(propvarex, xlab = "Principal Comp", ylab = "Prop of Var Expl", type = "b")
 plot(cumsum(propvarex), xlab = "Principal Comp", ylab = "Cum Prop of Var Expl", type = "b")
@@ -67,4 +66,14 @@ scores<-top4<-censusPCA$x[,1:4]
 #scores after applying varimax rotation
 scores_rotate<-scores %*% vmx$rotmat
 
+#using percetage of variance explained as weighting scheme
+var_perc<-data.matrix(propvarex[1:4])
+data.matrix(scores_rotate)
+
+#calculate weighted sum and apply z score standardization
+sumscores<-scale(data.matrix(scores_rotate)  %*% var_perc)
+Svi <-cbind(census_trans[,(1:4)],sumscores)
+
+#write to csv
+write.csv(Svi,file = "svi_output.csv",row.names = FALSE)
 
