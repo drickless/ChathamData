@@ -1,8 +1,4 @@
-install.packages("stats")
-
 library(tidyverse)
-library(devtools)
-
 
 setwd("~/Documents/GitHub/ChathamData")
 census <- read_csv("censusClean.csv", na="")
@@ -54,26 +50,32 @@ abline(h=1,col="red")
 censusPCA$sdev^2
 #4 components meet the criterion 
 
-censusPCA$rotation[,1:4]
+PCArot <- censusPCA$rotation[,1:4]
+#PCArot_trans <- as.matrix(transform(PCArot,PC1=-PC1))
 
 #varimax rotation
-vmx <- varimax(censusPCA$rotation[, 1:4],normalize=FALSE)
-vmx
+#vmx <- varimax(PCArot_trans,normalize=FALSE)
+vmx <- varimax(PCArot,normalize=FALSE)
 
 #scores
 scores<-top4<-censusPCA$x[,1:4]
+scoresTrans <- transform(as_data_frame(scores),PC1=-PC1) #change cardinality of PC1
 
-#scores after applying varimax rotation
-scores_rotate<-scores %*% vmx$rotmat
+#apply varimax rotation to scores
+#scores_rotate<-scores %*% vmx$rotmat
+scores_rotate <- as.matrix(scoresTrans) %*% vmx$rotmat
 
-#using percetage of variance explained as weighting scheme
+#use proportion of variance explained as weighting scheme
 var_perc<-data.matrix(propvarex[1:4])
-data.matrix(scores_rotate)
+#data.matrix(scores_rotate)
 
-#calculate weighted sum and apply z score standardization
+#calculate weighted sum and apply z standardization
 sumscores<-scale(data.matrix(scores_rotate)  %*% var_perc)
-Svi <-cbind(census_trans[,(1:4)],sumscores)
+Svi <- cbind(census_trans[,(1:4)],sumscores)
 
 #write to csv
 write.csv(Svi,file = "svi_output.csv",row.names = FALSE)
+
+
+
 
