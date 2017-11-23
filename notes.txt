@@ -1,0 +1,49 @@
+
+[?] add FIRM layer and other physical features to svi 
+[?] account for public/industrial land
+
+find which block group each survey point is in 
+create attribute sviscore = the score for that block group
+regression: sviscore ~ survey vars 
+
+
+add to survey points an attribute SVI
+for each block group in svi output
+	select the survey points that are inside the block group
+	SVI = sumscores
+	deselect
+
+
+
+-----
+
+Build SVI 
+	Run PCA on census data
+	Choose 4 components based on Kaiser rule
+	Evaluate components
+	Reverse cardinality of PC1 as it represents wealth/white
+	Apply varimax rotation to scores to reduce loading on multiple comps
+	Calculate weighted sum based on perc variance explained
+
+Export SVI scores to CSV --> svi_output.csv
+Join + append scores to CBG feature class --> chathamGropus_svi.shp
+Use Add Polygon Attributes to Points to assign SVI scores to survey points --> pointsSVI.shp
+Export attributes as CSV --> SVIsurvey.csv
+
+-----
+
+
+Linear model results
+
+PCNoRecov	no pattern
+ANoRecover	positive 	~0.1
+PCAbleMov	no pattern
+Aprotect	negative	---
+ARelocate	positive	0.05
+Hincome		negative	0.001 ???
+Education	negative	0.001
+Hispanic	positive	0.001	
+Black		positive	0.001
+
+
+
