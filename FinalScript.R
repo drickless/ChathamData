@@ -78,8 +78,9 @@ model <- glm(as.factor(PCNoRecovB) ~ Age_Cat+Hincome+
 
 summary(model)
 #logit model for perception vars
-model3 <- glm(as.factor(PCNoRecovB) ~ PCAbleMov+ARelocate+
-                KnowEstab+SLRPers+SSDPers+Aprotect+PCUnexp, 
+#as categorical values
+model3 <- glm(as.factor(PCNoRecovB) ~ as.factor(PCAbleMov)+as.factor(ARelocate)+
+                as.factor(KnowEstab)+as.factor(SLRPers)+as.factor(SSDPers)+as.factor(Aprotect)+as.factor(PCUnexp), 
               family = binomial(link='logit'), data = survey)
 summary(model3)
 
