@@ -124,29 +124,31 @@ summary(fit9)
 library(ggplot2)
 library(reshape2)
 #by ethnicity
-sp <- ggplot(surveydf, aes(x=ANoRecover,y=SVI))+
-  geom_smooth(method = 'lm') + geom_jitter()
+maineth <- subset(surveydf, Ethnicity < 4)
+
+sp <- ggplot(maineth, aes(x=ANoRecover,y=SVI))+
+  geom_smooth(method = 'lm') + geom_jitter() + labs(x="Lack of ability to recover")
 sp + facet_grid(.~Ethnicity)
 
-sp_prot <- ggplot(surveydf, aes(x=Aprotect,y=SVI))+
-  geom_smooth(method = 'lm') + geom_jitter()
+sp_prot <- ggplot(maineth, aes(x=Aprotect,y=SVI))+
+  geom_smooth(method = 'lm') + geom_jitter() + labs(x="Will take protective measures to stay")
 sp_prot + facet_grid(.~Ethnicity)
 
-sp_reloc <- ggplot(surveydf, aes(x=ARelocate,y=SVI))+
-  geom_smooth(method = 'lm') + geom_jitter()
+sp_reloc <- ggplot(maineth, aes(x=ARelocate,y=SVI))+
+  geom_smooth(method = 'lm') + geom_jitter() + labs(x="Desire to relocate")
 sp_reloc + facet_grid(.~Ethnicity)
 
 #by age
 sp_nrcov <- ggplot(surveydf, aes(x=ANoRecover,y=SVI))+
-  geom_smooth(method = 'lm') + geom_jitter()
+  geom_smooth(method = 'lm') + geom_jitter() + labs(x="Lack of ability to recover")
 sp_nrcov + facet_grid(.~Age_Cat)
 
 sp_age <- ggplot(surveydf, aes(x=Aprotect,y=SVI))+
-  geom_smooth(method = 'lm') + geom_jitter()
+  geom_smooth(method = 'lm') + geom_jitter() + labs(x="Protective measures to stay")
 sp_age + facet_grid(.~Age_Cat)
 
-sp_age1 <- ggplot(surveydf, aes(x=Hincome,y=SVI))+
-  geom_smooth(method = 'lm') + geom_jitter()
+sp_age1 <- ggplot(surveydf, aes(x=ARelocate,y=SVI))+
+  geom_smooth(method = 'lm') + geom_jitter() + labs(x="Desire to relocate")
 sp_age1 + facet_grid(.~Age_Cat)
 
 
