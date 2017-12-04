@@ -1,4 +1,7 @@
-library(tidyverse)
+library(dplyer)
+library(tibble)
+library(readr)
+library(tidyr)
 
 setwd("~/Documents/GitHub/ChathamData")
 
@@ -84,6 +87,7 @@ model3 <- glm(as.factor(PCNoRecovB) ~ as.factor(PCAbleMov)+as.factor(ARelocate)+
               family = binomial(link='logit'), data = survey)
 summary(model3)
 
+#as integers
 model4 <- glm(as.factor(ANoRecovB) ~ PCAbleMov+ARelocate+
                 KnowEstab+SLRPers+SSDPers+Aprotect+PCUnexp, 
               family = binomial(link='logit'), data = survey)
@@ -95,12 +99,12 @@ surveydf <- as_data_frame(surveySVI)
 
 surv <- select(surveydf, Evacuate,KnowEstab,SLRPers,SSDPers,ARelocate,Aprotect,ANoRecover,PCAbleMov,PCNoRecov,Age_Cat,Hincome,Education,Ethnicity,HomeLang,FldRisk,Gender,SVI)
 
-fit1 <- lm(SVI ~ as.factor(PCNoRecov), data=surv)
-fit2 <- lm(SVI ~ as.factor(ANoRecover),data=surv)
-fit3 <- lm(SVI ~ as.factor(PCAbleMov),data=surv)
-fit4 <- lm(SVI ~ as.factor(Aprotect),data=surv)
-fit5 <- lm(SVI ~ as.factor(ARelocate),data=surv)
-fit6 <- lm(SVI ~ as.factor(Hincome),data=surv)
+fit1 <- lm(SVI ~ PCNoRecov, data=surv)
+fit2 <- lm(SVI ~ ANoRecover,data=surv)
+fit3 <- lm(SVI ~ PCAbleMov,data=surv)
+fit4 <- lm(SVI ~ Aprotect,data=surv)
+fit5 <- lm(SVI ~ ARelocate,data=surv)
+fit6 <- lm(SVI ~ Hincome,data=surv)
 fit7 <- lm(SVI ~ as.factor(Education),data=surv)
 fit8 <- lm(SVI ~ as.factor(Ethnicity),data=surv)
 fit9 <- lm(SVI ~ ANoRecover, data=surv)
@@ -115,11 +119,35 @@ summary(fit7)
 summary(fit8)
 summary(fit9)
 
+#visualize
 
+library(ggplot2)
+library(reshape2)
+#by ethnicity
+sp <- ggplot(surveydf, aes(x=ANoRecover,y=SVI))+
+  geom_smooth(method = 'lm') + geom_jitter()
+sp + facet_grid(.~Ethnicity)
 
+sp_prot <- ggplot(surveydf, aes(x=Aprotect,y=SVI))+
+  geom_smooth(method = 'lm') + geom_jitter()
+sp_prot + facet_grid(.~Ethnicity)
 
+sp_reloc <- ggplot(surveydf, aes(x=ARelocate,y=SVI))+
+  geom_smooth(method = 'lm') + geom_jitter()
+sp_reloc + facet_grid(.~Ethnicity)
 
+#by age
+sp_nrcov <- ggplot(surveydf, aes(x=ANoRecover,y=SVI))+
+  geom_smooth(method = 'lm') + geom_jitter()
+sp_nrcov + facet_grid(.~Age_Cat)
 
+sp_age <- ggplot(surveydf, aes(x=Aprotect,y=SVI))+
+  geom_smooth(method = 'lm') + geom_jitter()
+sp_age + facet_grid(.~Age_Cat)
+
+sp_age1 <- ggplot(surveydf, aes(x=Hincome,y=SVI))+
+  geom_smooth(method = 'lm') + geom_jitter()
+sp_age1 + facet_grid(.~Age_Cat)
 
 
 
